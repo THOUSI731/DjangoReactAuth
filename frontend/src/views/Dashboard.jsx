@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import useAxios from "../Utils/useAxios"
 import jwtDecode from "jwt-decode"
+import axios from "axios"
 
 export default function Dashboard() {
-  const [res,setResponse] = useState("")
-  // const api = useAxios();
+  const [response,setResponse] = useState("")
+  const api = useAxios();
   const token = localStorage.getItem("authTokens")
 
   if (token){
@@ -14,6 +15,19 @@ export default function Dashboard() {
     var full_name = decode.full_name
     var image = decode.image
   }
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const response = await api.post("/test/")
+        setResponse(response.data.response)
+      } catch (error){
+        console.log(error);
+        setResponse("Something Went Wrong")
+      }
+    }
+    fetchData()
+  },[])
   return (
     <div>
       <>
@@ -113,7 +127,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className='alert alert-success'>
-          {/* <strong>{res}</strong> */}
+          <strong>{response}</strong>
         </div>
         <h2>Section title</h2>
         <div className="table-responsive">
